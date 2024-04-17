@@ -1,22 +1,10 @@
 import psycopg2
 
-from src.parsing_cfg import get_cfg
-
 
 class DBManager:
     def __init__(self, db_name, db_params):
         self.connect = psycopg2.connect(dbname=db_name, **db_params)
         self.cursor = self.connect.cursor()
-
-    # def execute_(self, query):
-    #     params = get_cfg('cfg.ini')
-    #     conn = psycopg2.connect(dbname=self.db_name, **params)
-    #     with conn:
-    #         with conn.cursor() as cur:
-    #             cur.execute(query)
-    #             results = cur.fetchall()
-    #     conn.close()
-    #     return results
 
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании."""

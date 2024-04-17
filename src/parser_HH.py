@@ -1,7 +1,6 @@
 import requests
 
 
-
 class Parser:
     """Класс для работы с API hh.ru"""
 

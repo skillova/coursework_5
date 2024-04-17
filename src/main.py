@@ -5,7 +5,6 @@ from dbmanager import DBManager
 from src.parsing_cfg import get_cfg
 from src.create_db import CreateDB
 from parser_HH import Parser
-from utils import get_data_for_tables
 
 if __name__ == '__main__':
     # Объявляем переменные для базы данных
@@ -39,5 +38,3 @@ if __name__ == '__main__':
     # pprint(obj.get_avg_salary())
     # pprint(obj.get_vacancies_with_higher_salary())
     # pprint(obj.get_vacancies_with_keyword())
-
-

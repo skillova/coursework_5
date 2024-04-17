@@ -69,8 +69,8 @@ ORDER BY company_id'''
 
     def get_vacancies_with_keyword(self):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
-        sql = '''SELECT * FROM vacancies
-        WHERE vacancy_name iLIKE "%инженер%"'''
+        sql = """SELECT * FROM vacancies
+        WHERE vacancy_name iLIKE '%инженер%'"""
         with self.connect:
             try:
                 self.cursor.execute(sql)

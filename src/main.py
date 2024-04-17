@@ -1,5 +1,6 @@
 import os
 from pprint import pprint
+from dbmanager import DBManager
 
 from src.parsing_cfg import get_cfg
 from src.create_db import CreateDB
@@ -32,6 +33,11 @@ if __name__ == '__main__':
     # Наполняем таблицы базы данных
     CreateDB(db_param, db_name).insert_in_tables(all_data_employers)
 
-
+    obj = DBManager(db_name, db_param)
+    # pprint(obj.get_companies_and_vacancies_count())
+    # pprint(obj.get_all_vacancies())
+    # pprint(obj.get_avg_salary())
+    # pprint(obj.get_vacancies_with_higher_salary())
+    # pprint(obj.get_vacancies_with_keyword())
 
 

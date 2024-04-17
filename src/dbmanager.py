@@ -4,53 +4,76 @@ from src.parsing_cfg import get_cfg
 
 
 class DBManager:
-    def __init__(self, db_name):
-        self.db_name = db_name
+    def __init__(self, db_name, db_params):
+        self.connect = psycopg2.connect(dbname=db_name, **db_params)
+        self.cursor = self.connect.cursor()
 
-    def execute_(self, query, params):
-        params = get_cfg('cfg.ini')
-        conn = psycopg2.connect(dbname=self.db_name, **params)
-        with conn:
-            with conn.cursor() as cur:
-                cur.execute(query)
-                results = cur.fetchall()
-        conn.close()
-        return results
+    # def execute_(self, query):
+    #     params = get_cfg('cfg.ini')
+    #     conn = psycopg2.connect(dbname=self.db_name, **params)
+    #     with conn:
+    #         with conn.cursor() as cur:
+    #             cur.execute(query)
+    #             results = cur.fetchall()
+    #     conn.close()
+    #     return results
 
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании."""
-        result = self.execute_(f'SELECT employers.company_id, vacancies.company_name,'
-                               f' COUNT(company_name) AS "Количество вакансий" '
-                               f'FROM employers INNER JOIN vacancies '
-                               f'USING (company_name) '
-                               f'GROUP BY employers.company_id, vacancies.company_name '
-                               f'ORDER BY company_id')
-        return result
+        sql = '''SELECT employers.company_id, vacancies.company_name, COUNT(company_name) AS "Количество вакансий" 
+FROM employers INNER JOIN vacancies
+USING (company_name)
+GROUP BY employers.company_id, vacancies.company_name
+ORDER BY company_id'''
+        with self.connect:
+            try:
+                self.cursor.execute(sql)
+                return self.cursor.fetchall()
+            except Exception as e:
+                return e
 
     def get_all_vacancies(self):
         """Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на
         вакансию."""
-        result = self.execute_(f'SELECT vacancy_name, company_name, salary_from, salary_from, url_vacancy '
-                               f'FROM vacancies')
-        return result
+        sql = '''SELECT vacancy_name, company_name, salary_from, salary_from, url_vacancy 
+        FROM vacancies'''
+        with self.connect:
+            try:
+                self.cursor.execute(sql)
+                return self.cursor.fetchall()
+            except Exception as e:
+                return e
 
     def get_avg_salary(self):
         """Получает среднюю зарплату по вакансиям."""
-        result = self.execute_(f'SELECT AVG(salary_from) AS "Средняя зарплата ОТ", '
-                               f'AVG(salary_to) AS "Средняя зарплата ДО" FROM vacancies')
-        return result
+        sql = '''SELECT AVG(salary_from) AS "Средняя зарплата ОТ", AVG(salary_to) AS "Средняя зарплата ДО" 
+        FROM vacancies'''
+        with self.connect:
+            try:
+                self.cursor.execute(sql)
+                return self.cursor.fetchall()
+            except Exception as e:
+                return e
 
     def get_vacancies_with_higher_salary(self):
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
-        result = self.execute_(f'SELECT * FROM vacancies '
-                               f'WHERE salary_from >(SELECT AVG(salary_from) '
-                               f'FROM vacancies) AND salary_to > (SELECT AVG(salary_to) FROM vacancies) '
-                               f'ORDER BY vacancy_id')
-        return result
+        sql = '''SELECT * FROM vacancies WHERE salary_from >(SELECT AVG(salary_from)
+        FROM vacancies) AND salary_to > (SELECT AVG(salary_to) FROM vacancies)
+        ORDER BY vacancy_id'''
+        with self.connect:
+            try:
+                self.cursor.execute(sql)
+                return self.cursor.fetchall()
+            except Exception as e:
+                return e
 
     def get_vacancies_with_keyword(self):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
-        result = self.execute_(f"SELECT * "
-                               f"FROM vacancies "
-                               f"WHERE vacancy_name LIKE '%инженер%'")
-        return result
+        sql = '''SELECT * FROM vacancies
+        WHERE vacancy_name iLIKE "%инженер%"'''
+        with self.connect:
+            try:
+                self.cursor.execute(sql)
+                return self.cursor.fetchall()
+            except Exception as e:
+                return e

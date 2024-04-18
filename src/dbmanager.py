@@ -2,8 +2,8 @@ import psycopg2
 
 
 class DBManager:
-    def __init__(self, db_name, db_params):
-        self.connect = psycopg2.connect(dbname=db_name, **db_params)
+    def __init__(self, db_params):
+        self.connect = psycopg2.connect(**db_params)
         self.cursor = self.connect.cursor()
 
     def get_companies_and_vacancies_count(self):

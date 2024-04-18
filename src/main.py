@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # Наполняем таблицы базы данных
     CreateDB(db_param, db_name).insert_in_tables(all_data_employers)
 
-    obj = DBManager(db_name, db_param)
+    obj = DBManager(db_param)
     # pprint(obj.get_companies_and_vacancies_count())
     # pprint(obj.get_all_vacancies())
     # pprint(obj.get_avg_salary())

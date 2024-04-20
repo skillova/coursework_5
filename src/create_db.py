@@ -9,6 +9,7 @@ class CreateDB:
             connection.autocommit = True
 
     def create_db(self):
+        self.cursor.execute(f'DROP DATABASE IF EXISTS {self.db_name}')
         sql = f"CREATE DATABASE {self.db_name}"
         self.cursor.execute(sql)
 

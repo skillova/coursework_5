@@ -8,11 +8,8 @@ class DBManager:
 
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании."""
-        sql = '''SELECT employers.company_id, vacancies.company_name, COUNT(company_name) AS "Количество вакансий" 
-FROM employers INNER JOIN vacancies
-USING (company_name)
-GROUP BY employers.company_id, vacancies.company_name
-ORDER BY company_id'''
+        sql = '''SELECT company_name, COUNT(company_name) FROM vacancies
+GROUP BY vacancies.company_name'''
         with self.connect:
             try:
                 self.cursor.execute(sql)
@@ -23,8 +20,7 @@ ORDER BY company_id'''
     def get_all_vacancies(self):
         """Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на
         вакансию."""
-        sql = '''SELECT vacancy_name, company_name, salary_from, salary_from, url_vacancy 
-        FROM vacancies'''
+        sql = '''SELECT company_name, vacancy_name, salary_from, salary_to, url_vacancy FROM vacancies'''
         with self.connect:
             try:
                 self.cursor.execute(sql)
@@ -55,10 +51,9 @@ ORDER BY company_id'''
             except Exception as e:
                 return e
 
-    def get_vacancies_with_keyword(self):
+    def get_vacancies_with_keyword(self, keyword_name):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
-        sql = """SELECT * FROM vacancies
-        WHERE vacancy_name iLIKE '%инженер%'"""
+        sql = f"SELECT * FROM vacancies WHERE vacancy_name iLIKE '%{keyword_name}%'"
         with self.connect:
             try:
                 self.cursor.execute(sql)

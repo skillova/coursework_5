@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     # Объявляем переменные для фарсера HH.ru
     url = 'https://api.hh.ru/vacancies'
-    employers = [1473866, 78638, 493586, 4181, 85339]
+    employers = [1473866, 78638, 493586, 4181, 85339, 54979, 2180]
     page = 0
     per_page = 1
 
@@ -33,8 +33,27 @@ if __name__ == '__main__':
     CreateDB(db_param, db_name).insert_in_tables(all_data_employers)
 
     obj = DBManager(db_param)
-    # pprint(obj.get_companies_and_vacancies_count())
-    # pprint(obj.get_all_vacancies())
-    # pprint(obj.get_avg_salary())
-    # pprint(obj.get_vacancies_with_higher_salary())
-    # pprint(obj.get_vacancies_with_keyword())
+
+    while True:
+        answer = input('\nВывод инфо (ввести цифру нажать Enter) или "q" для выхода из программы:\n'
+                       '1-список всех компаний и количество вакансий у каждой компании\n'
+                       '2-список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансии\n'
+                       '3-среднюю зарплату по вакансиям\n'
+                       '4-список всех вакансий, у которых зарплата выше средней по всем вакансиям\n'
+                       '5-список всех вакансий, в названии которых содержатся переданные в метод слова, например python\n')
+        if answer == '1':
+            result = (obj.get_companies_and_vacancies_count())
+        if answer == '2':
+            result = (obj.get_all_vacancies())
+        if answer == '3':
+            result = (obj.get_avg_salary())
+        if answer == '4':
+            result = (obj.get_vacancies_with_higher_salary())
+        if answer == '5':
+            keyword = input('Введите ключевое слово для поиска\n')
+            result = (obj.get_vacancies_with_keyword(keyword))
+        if answer == 'q':
+            print("Программа завершена")
+            break
+
+        pprint(result)
